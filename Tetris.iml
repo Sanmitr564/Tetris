@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="+libGdxLibs" level="project" />
+    <orderEntry type="library" name="+libgdxLibs" level="project" />
   </component>
 </module>

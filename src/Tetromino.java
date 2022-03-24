@@ -1,12 +1,15 @@
+import com.badlogic.gdx.graphics.Color;
+
 public abstract class Tetromino {
     private Rotation rotation;
     private int[][] blocks;
     private int[][] center;
-    public Tetromino(int[][] center, int[][] blocks){
+    private Color color;
+    public Tetromino(int[][] center, int[][] blocks, Color color){
         this.center = center;
         this.blocks = blocks;
         rotation = Rotation.up;
-
+        this.color = color;
     }
     public abstract void rotate(Rotate r);
 
