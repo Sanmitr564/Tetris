@@ -28,6 +28,8 @@ public class Tetris extends ApplicationAdapter
     private SpriteBatch batch; //also needed to draw fonts (text)
 
     public static Pieces[][] board;
+    private Tetromino piece;
+
     @Override//called once when we start the game
     public void create(){
 
@@ -56,7 +58,7 @@ public class Tetris extends ApplicationAdapter
         batch.dispose();
     }
 
-    public void preRender(){
+    private void preRender(){
         viewport.apply();
 
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
@@ -65,5 +67,18 @@ public class Tetris extends ApplicationAdapter
 
         //draw everything on the screen
         renderer.setProjectionMatrix(viewport.getCamera().combined);
+    }
+
+    private void control(){
+        if(Gdx.input.isKeyJustPressed(Keys.Z)){
+            piece.rotate(Rotate.counterClockwise);
+        }
+        if(Gdx.input.isKeyJustPressed(Keys.X)){
+            piece.rotate(Rotate.clockwise);
+        }
+    }
+
+    private void renderGrid(){
+
     }
 }

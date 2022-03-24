@@ -4,7 +4,7 @@ public class RotationValues {
     //Arrays are called as [facingDirection][blockNumber][row/colOffset]
     //For blocks that rotate around a corner, (0,0) is the block to the bottom left of the corner
 
-    public static int[][][] jValues = new int[][][]{
+    public static final int[][][] jValues = new int[][][]{
             {
                     {1, -1},
                     {0, -1},
@@ -31,7 +31,7 @@ public class RotationValues {
             }
     };
 
-    public static int[][][] lValues = new int[][][]{
+    public static final int[][][] lValues = new int[][][]{
             {
                     {0, -1},
                     {0, 0},
