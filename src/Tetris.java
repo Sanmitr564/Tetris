@@ -19,9 +19,6 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.*;
 
-//NOTE: Always reset the JVM before compiling (it is the small loop arrow in the
-//bottom right corner of the project window)!! 
-
 public class Tetris extends ApplicationAdapter
 {
     private OrthographicCamera camera; //the camera to our world
@@ -30,6 +27,7 @@ public class Tetris extends ApplicationAdapter
     private BitmapFont font; //used to draw fonts (text)
     private SpriteBatch batch; //also needed to draw fonts (text)
 
+    public static Pieces[][] board;
     @Override//called once when we start the game
     public void create(){
 
@@ -39,6 +37,7 @@ public class Tetris extends ApplicationAdapter
         font = new BitmapFont();
         batch = new SpriteBatch();//if you want to use images instead of using ShapeRenderer 
 
+        board = new Pieces[20][10];
     }
 
     @Override//called 60 times a second
