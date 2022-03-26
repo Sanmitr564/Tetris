@@ -1,26 +1,30 @@
 import com.badlogic.gdx.graphics.Color;
 
-public abstract class Tetromino {
+public class Tetromino {
     private Rotation rotation;
-    private int[][] blocks;
+    //private int[][] blocks;
     private int[] center;
-    private Color color;
-    private Pieces piece;
+    private final Color color;
+    private final Pieces piece;
 
-    public Tetromino(int[] center, Pieces piece, Color color) {
+    public Tetromino(Pieces piece, int[] center) {
         this.center = center;
         this.piece = piece;
         rotation = Rotation.up;
-        this.color = color;
+        this.color = Global.COLORS[piece.ordinal()];
     }
 
     public Rotation getRotation() {
         return rotation;
     }
 
+    //getBlocks
+    /*
     public int[][] getBlocks() {
         return blocks;
     }
+
+     */
 
     public int[] getCenter() {
         return center;
@@ -30,83 +34,125 @@ public abstract class Tetromino {
         this.rotation = rotation;
     }
 
+    //setBlocks
+    /*
     public void setBlocks(int[][] blocks) {
         this.blocks = blocks;
     }
+     */
 
     public void setCenter(int[] center) {
         this.center = center;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
     public void up() {
-        center[0]++;
+        if (canMove(rotation, new int[]{1, 0})) {
+            center[0]++;
+        }
+        updateGrid(color);
     }
 
     public void down() {
-        center[0]--;
+        if (canMove(rotation, new int[]{-1, 0})) {
+            center[0]--;
+        }
+        updateGrid(color);
     }
 
     public void left() {
-        center[1]--;
+        if (canMove(rotation, new int[]{0, -1})) {
+            center[1]--;
+        }
+        updateGrid(color);
     }
 
     public void right() {
-        center[1]++;
+        if (canMove(rotation, new int[]{0, 1})) {
+            center[1]++;
+        }
+        updateGrid(color);
+    }
+
+    public void updateGrid(Color c) {
+        for (int i = 0; i < 4; i++) {
+            int[] centerOffset = RotationData.rotationValues
+                    [piece.ordinal()]
+                    [rotation.ordinal()]
+                    [i];
+            Tetris.board[center[0] + centerOffset[0]][center[1] + centerOffset[1]] = c;
+        }
+
     }
 
     public void rotate(Rotate r) {
-        if (r == Rotate.clockwise) {
-            switch (rotation) {
-                case up:
-                    //method for 0->1
-                    break;
-                case right:
-                    //method for 1->2
-                    break;
-                case down:
-                    //method for 2->3
-                    break;
-                case left:
-                    //method for 3->0
-                    break;
-            }
-        } else {
-            switch (rotation) {
-                case up:
-                    //method for 0->3
-                    break;
-                case right:
-                    //method for 1->0;
-                    break;
-                case down:
-                    //method for 2->1
-                    break;
-                case left:
-                    //method for 3->2
-                    break;
+        if (piece == Pieces.OPiece)
+            return;
+        Rotation temp;
+        int num = 0;
+        switch (r) {
+            case clockwise -> num = rotation.ordinal() + 1;
+            case counterClockwise -> num = rotation.ordinal() - 1;
+        }
+        if (num > 3) {
+            num -= 4;
+        } else if (num < 0) {
+            num += 4;
+        }
+        temp = Rotation.values()[num];
+        int[][][][] kickData;
+        if(piece == Pieces.IPiece){
+            kickData = RotationData.iKickData;
+        }else{
+            kickData = RotationData.standardKickData;
+        }
+        for (int[] arr : kickData[r.ordinal()][rotation.ordinal()]) {
+            if (canMove(temp, arr)) {
+                rotation = temp;
+                center[0] += arr[0];
+                center[1] += arr[1];
+                break;
             }
         }
+        updateGrid(color);
     }
 
-    private void upClockWise() {
-
+    private boolean canMove(Rotation r, int[] offset) {
+        updateGrid(Color.WHITE);
+        boolean canMove = true;
+        try {
+            for (int i = 0; i < 4; i++) {
+                int[] centerOffset = RotationData.rotationValues
+                        [piece.ordinal()]
+                        [r.ordinal()]
+                        [i];
+                if (Tetris.board[center[0] + centerOffset[0] + offset[0]][center[1] + centerOffset[1] + offset[1]] != Color.WHITE) {
+                    return false;
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
+        return canMove;
     }
 
-    private void tryRotateOffset() {
-
+    public boolean canMoveDown() {
+        boolean b = canMove(rotation, new int[]{-1, 0});
+        updateGrid(color);
+        return b;
     }
 
-    private void rotateOffset(int xOffset, int yOffset) {
-
-    }
 }
 
 class RotationData {
     //Coordinates are listed as {rowOffset, colOffset}/{yOffset, xOffset}
     //All values are positions relative to the center of rotation of the tetromino
-    //Arrays are called as [pieceType][facingDirection][blockNumber][row/colOffset]
+    //Arrays are called as [pieceType][rotation][blockNumber][row/colOffset]
     //For blocks that rotate around a corner, (0,0) is the block to the bottom left of the corner
-
+    //<editor-fold desc="Piece Rotation Values">
     public static final int[][][][] rotationValues = new int[][][][]
             {
                     //jValues
@@ -162,11 +208,148 @@ class RotationData {
                                     {0, 0},
                                     {-1, 0}
                             }
+                    },
+                    //sValues
+                    {
+                            {
+                                    {0, -1},
+                                    {0, 0},
+                                    {1, 0},
+                                    {1, 1}
+                            },
+                            {
+                                    {1, 0},
+                                    {0, 0},
+                                    {0, 1},
+                                    {-1, 1}
+                            },
+                            {
+                                    {0, 1},
+                                    {0, 0},
+                                    {-1, 0},
+                                    {-1, -1}
+                            },
+                            {
+                                    {-1, 0},
+                                    {0, 0},
+                                    {0, -1},
+                                    {1, -1}
+                            }
+                    },
+                    //zValues
+                    {
+                            {
+                                    {1, -1},
+                                    {1, 0},
+                                    {0, 0},
+                                    {0, 1}
+                            },
+                            {
+                                    {1, 1},
+                                    {0, 1},
+                                    {0, 0},
+                                    {-1, 0}
+                            },
+                            {
+                                    {-1, 1},
+                                    {-1, 0},
+                                    {0, 0},
+                                    {0, -1}
+                            },
+                            {
+                                    {-1, -1},
+                                    {0, -1},
+                                    {0, 0},
+                                    {1, 0}
+                            }
+                    },
+                    //tValues
+                    {
+                            {
+                                    {0, -1},
+                                    {0, 0},
+                                    {1, 0},
+                                    {0, 1}
+                            },
+                            {
+                                    {1, 0},
+                                    {0, 0},
+                                    {0, 1},
+                                    {-1, 0}
+                            },
+                            {
+                                    {0, -1},
+                                    {0, 0},
+                                    {-1, 0},
+                                    {0, 1}
+                            },
+                            {
+                                    {-1, 0},
+                                    {0, 0},
+                                    {0, -1},
+                                    {1, 0}
+                            }
+                    },
+                    //iValues
+                    {
+                            {
+                                    {1, -1},
+                                    {1, 0},
+                                    {1, 1},
+                                    {1, 2},
+                            },
+                            {
+                                    {2, 1},
+                                    {1, 1},
+                                    {0, 1},
+                                    {-1, 1}
+                            },
+                            {
+                                    {0, -1},
+                                    {0, 0},
+                                    {0, 1},
+                                    {0, 2},
+                            },
+                            {
+                                    {2, 0},
+                                    {1, 0},
+                                    {0, 0},
+                                    {-1, 0},
+                            }
+                    },
+                    //oValues
+                    {
+                            {
+                                    {0, 0},
+                                    {1, 0},
+                                    {1, 1},
+                                    {0, 1}
+                            },
+                            {
+                                    {0, 0},
+                                    {1, 0},
+                                    {1, 1},
+                                    {0, 1}
+                            },
+                            {
+                                    {0, 0},
+                                    {1, 0},
+                                    {1, 1},
+                                    {0, 1}
+                            },
+                            {
+                                    {0, 0},
+                                    {1, 0},
+                                    {1, 1},
+                                    {0, 1}
+                            },
                     }
             };
+    //</editor-fold>
 
     //[clockwise/counterclockwise][currentRotation][testNumber][rowOffset/colOffset]
-    public static final int[][][][] kickData = new int[][][][]{
+    //<editor-fold desc="Standard Piece Kick Data">
+    public static final int[][][][] standardKickData = new int[][][][]{
             //Clockwise
             {
                     //Current rotation
@@ -174,7 +357,7 @@ class RotationData {
 
                             //testNumber
                             //{rowOffset, colOffset}
-                            {0,0},
+                            {0, 0},
                             {0, -1},
                             {1, -1},
                             {-2, 0},
@@ -182,21 +365,21 @@ class RotationData {
 
                     },
                     {
-                            {0,0},
+                            {0, 0},
                             {0, 1},
                             {-1, 1},
                             {2, 0},
                             {2, 1}
                     },
                     {
-                            {0,0},
+                            {0, 0},
                             {0, 1},
                             {1, 1},
                             {-2, 0},
                             {-2, 1}
                     },
                     {
-                            {0,0},
+                            {0, 0},
                             {0, -1},
                             {-1, -1},
                             {2, 0},
@@ -209,32 +392,104 @@ class RotationData {
                     {
                             //testNumber
                             //{rowOffset, colOffset}
-                            {0,0},
-                            {0,1},
-                            {1,1},
-                            {-2,0},
-                            {-2,1}
+                            {0, 0},
+                            {0, 1},
+                            {1, 1},
+                            {-2, 0},
+                            {-2, 1}
+                    },
+                    {
+                            {0, 0},
+                            {0, 1},
+                            {-1, 1},
+                            {2, 0},
+                            {2, 1}
+                    },
+                    {
+                            {0, 0},
+                            {0, -1},
+                            {1, -1},
+                            {-2, 1},
+                            {-2, -1}
+                    },
+                    {
+                            {0, 0},
+                            {0, -1},
+                            {-1, -1},
+                            {2, 0},
+                            {2, -1}
+                    }
+            }
+    };
+    //</editor-fold>
+
+    public static final int[][][][] iKickData = new int[][][][]{
+            //Clockwise
+            {
+                    //Current rotation
+                    {
+                            //testNumber
+                            //{rowOffset, colOffset}
+                            {0, 0},
+                            {0, -2},
+                            {0, 1},
+                            {-1, -2},
+                            {2, 1}
+                    },
+                    {
+                            {0, 0},
+                            {0, -1},
+                            {0, 2},
+                            {2, -1},
+                            {-1, 2}
+                    },
+                    {
+                            {0, 0},
+                            {0, 2},
+                            {0, -1},
+                            {1, 2},
+                            {-2, -1}
+                    },
+                    {
+                            {0, 0},
+                            {0, 1},
+                            {0, -2},
+                            {-2, 1},
+                            {1, -2}
+                    }
+            },
+            //counterClockwise
+            {
+                    //Current rotation
+                    {
+                            //testNumber
+                            //{rowOffset, colOffset}
+                            {0, 0},
+                            {0, -1},
+                            {0, 2},
+                            {2, -1},
+                            {-1, 2}
                     },
                     {
                             {0,0},
-                            {0,1},
-                            {-1,1},
-                            {2,0},
-                            {2,1}
-                    },
-                    {
-                            {0,0},
+                            {0,2},
                             {0,-1},
-                            {1,-1},
-                            {-2,1},
+                            {1,2},
                             {-2,-1}
                     },
                     {
                             {0,0},
-                            {0,-1},
-                            {-1,-1},
-                            {2,0},
-                            {2,-1}
+                            {0,1},
+                            {0,-2},
+                            {-2,1},
+                            {1,-2}
+                    },
+                    {
+                            {0,0},
+                            {0,-2},
+                            {0,1},
+                            {-1,-2},
+                            {2,1}
                     }
             }
     };

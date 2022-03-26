@@ -1,3 +1,3 @@
 public enum Pieces {
-    JPiece, LPiece, IPiece, OPiece, SPiece, ZPiece, TPiece
+    JPiece, LPiece, SPiece, ZPiece, TPiece, IPiece, OPiece
 }

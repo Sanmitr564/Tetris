@@ -1,7 +1,23 @@
-public class Global {
-    public static int WORLD_WIDTH = 600;
-    public static int WORLD_HEIGHT = 800;
+import com.badlogic.gdx.graphics.Color;
 
-    public static int X = 1;
-    public static int Y = 0;
+public class Global {
+    public static final int WORLD_WIDTH = 500;
+    public static final int WORLD_HEIGHT = 1000;
+
+    public static final int X = 1;
+    public static final int Y = 0;
+
+    public static final int ROWS = 23;
+    public static final int COLS = 10;
+    public static final float SQUARE_SIZE = 48;
+
+    public static final Color[] COLORS = new Color[] {
+            Color.BLUE,
+            Color.ORANGE,
+            Color.GREEN,
+            Color.RED,
+            Color.PURPLE,
+            Color.TEAL,
+            Color.YELLOW
+    };
 }
