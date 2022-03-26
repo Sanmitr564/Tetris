@@ -157,7 +157,7 @@ public class Tetris extends ApplicationAdapter
     }
 
     private void scanRows(){
-        for(int row = 0; row<board.length; row++){
+        for(int row = board.length-1; row>=0; row--){
             boolean isFull = true;
             for(int col = 0; col<board[row].length; col++){
                 if(board[row][col] == Color.WHITE){
@@ -180,9 +180,7 @@ public class Tetris extends ApplicationAdapter
 
     private void randomTetrominos(){
         ArrayList<Pieces> tetrominoListClone = new ArrayList<>();
-        for(Pieces p : tetrominoList){
-            tetrominoListClone.add(p);
-        }
+        tetrominoListClone.addAll(tetrominoList);
         while(tetrominoListClone.size() > 0){
             Pieces temp = tetrominoListClone.remove((int)(Math.random() * tetrominoListClone.size()));
             tetrominos.add(new Tetromino(temp));
