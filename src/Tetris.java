@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.*;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -34,10 +35,13 @@ public class Tetris extends ApplicationAdapter
     private Tetromino piece;
 
     private ArrayList<Tetromino> tetrominos;
-    private static ArrayList<Tetromino> tetrominoList;
+    private static final ArrayList<Pieces> tetrominoList= new ArrayList<>(Arrays.asList(
+            Pieces.JPiece, Pieces.LPiece, Pieces.SPiece, Pieces.ZPiece, Pieces.TPiece, Pieces.IPiece, Pieces.OPiece
+    ));
 
     private int stickTimer;
     private int dropTimer;
+
     @Override//called once when we start the game
     public void create(){
 
@@ -52,32 +56,28 @@ public class Tetris extends ApplicationAdapter
             Arrays.fill(colors, Color.WHITE);
         }
         tetrominos = new ArrayList<>();
-        tetrominoList = new ArrayList<>(Arrays.asList(
-                new Tetromino(Pieces.JPiece, new int[] {20,5}),
-                new Tetromino(Pieces.LPiece, new int[] {20,5}),
-                new Tetromino(Pieces.SPiece, new int[] {20,5}),
-                new Tetromino(Pieces.ZPiece, new int[] {20,5}),
-                new Tetromino(Pieces.TPiece, new int[] {20,5}),
-                new Tetromino(Pieces.IPiece, new int[] {20,4}),
-                new Tetromino(Pieces.OPiece, new int[] {20,4})
-        ));
-        piece = new Tetromino(Pieces.OPiece, new int[] {20,4});
+
+        randomTetrominos();
+        //randomTetrominos();
+        piece = tetrominos.remove(0);
 
     }
 
     @Override//called 60 times a second
     public void render(){
         preRender();
-
         updatePiece();
         control();
 
         if(!piece.canMoveDown()){
             stickTimer++;
             dropTimer = 0;
-            if(stickTimer%90==0){
-                piece = new Tetromino(Pieces.JPiece, new int[] {10,5});
+            if(stickTimer%45==0){
                 scanRows();
+                piece = tetrominos.remove(0);
+                if(tetrominos.size() == 0){
+                    randomTetrominos();
+                }
             }
         }else{
             stickTimer = 0;
@@ -130,6 +130,14 @@ public class Tetris extends ApplicationAdapter
         if(Gdx.input.isKeyJustPressed(Keys.RIGHT)){
             piece.right();
         }
+        if(Gdx.input.isKeyJustPressed(Keys.SPACE)){
+            piece.drop();
+            scanRows();
+            piece = tetrominos.remove(0);
+            if(tetrominos.size()<7){
+                randomTetrominos();
+            }
+        }
     }
 
     private void drawGrid() {
@@ -171,6 +179,13 @@ public class Tetris extends ApplicationAdapter
     }
 
     private void randomTetrominos(){
-
+        ArrayList<Pieces> tetrominoListClone = new ArrayList<>();
+        for(Pieces p : tetrominoList){
+            tetrominoListClone.add(p);
+        }
+        while(tetrominoListClone.size() > 0){
+            Pieces temp = tetrominoListClone.remove((int)(Math.random() * tetrominoListClone.size()));
+            tetrominos.add(new Tetromino(temp));
+        }
     }
 }

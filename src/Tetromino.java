@@ -14,6 +14,28 @@ public class Tetromino {
         this.color = Global.COLORS[piece.ordinal()];
     }
 
+    public Tetromino(Tetromino t){
+        this.center = t.getCenter();
+        this.piece = t.getPiece();
+        this.color = Global.COLORS[piece.ordinal()];
+        rotation = Rotation.up;
+    }
+
+    public Tetromino(Pieces piece){
+        this.piece = piece;
+        if(piece == Pieces.IPiece || piece == Pieces.OPiece){
+            this.center = new int[] {20, 4};
+        }else{
+            this.center = new int[] {20,5};
+        }
+        this.color = Global.COLORS[piece.ordinal()];
+        rotation = Rotation.up;
+    }
+
+    private Pieces getPiece() {
+        return piece;
+    }
+
     public Rotation getRotation() {
         return rotation;
     }
@@ -77,13 +99,19 @@ public class Tetromino {
         updateGrid(color);
     }
 
+    public void drop() {
+        while(canMoveDown()){
+            down();
+        }
+    }
+
     public void updateGrid(Color c) {
         for (int i = 0; i < 4; i++) {
             int[] centerOffset = RotationData.rotationValues
                     [piece.ordinal()]
                     [rotation.ordinal()]
                     [i];
-            Tetris.board[center[0] + centerOffset[0]][center[1] + centerOffset[1]] = c;
+           Tetris.board[center[0] + centerOffset[0]][center[1] + centerOffset[1]] = c;
         }
 
     }

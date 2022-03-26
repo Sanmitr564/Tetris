@@ -10,5 +10,6 @@
     <orderEntry type="library" name="+libGdxLibs" level="project" />
     <orderEntry type="library" name="+libgdxLibs" level="project" />
     <orderEntry type="library" name="+libGdxLibs" level="project" />
+    <orderEntry type="library" name="+libgdxLibs" level="project" />
   </component>
 </module>
