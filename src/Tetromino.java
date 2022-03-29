@@ -15,10 +15,12 @@ public class Tetromino {
     }
 
     public Tetromino(Tetromino t){
-        this.center = t.getCenter();
+        center = new int[2];
+        this.center[0] = t.getCenter()[0];
+        this.center[1] = t.getCenter()[1];
         this.piece = t.getPiece();
         this.color = Global.COLORS[piece.ordinal()];
-        rotation = Rotation.up;
+        rotation = t.getRotation();
     }
 
     public Tetromino(Pieces piece){
@@ -40,13 +42,9 @@ public class Tetromino {
         return rotation;
     }
 
-    //getBlocks
-    /*
     public int[][] getBlocks() {
-        return blocks;
+        return RotationData.rotationValues[piece.ordinal()][rotation.ordinal()];
     }
-
-     */
 
     public int[] getCenter() {
         return center;
@@ -55,13 +53,6 @@ public class Tetromino {
     public void setRotation(Rotation rotation) {
         this.rotation = rotation;
     }
-
-    //setBlocks
-    /*
-    public void setBlocks(int[][] blocks) {
-        this.blocks = blocks;
-    }
-     */
 
     public void setCenter(int[] center) {
         this.center = center;
@@ -173,6 +164,9 @@ public class Tetromino {
         return b;
     }
 
+    public boolean checkDown() {
+        return canMove(rotation, new int[]{-1, 0});
+    }
 }
 
 class RotationData {
@@ -373,6 +367,7 @@ class RotationData {
                             },
                     }
             };
+
     //</editor-fold>
 
     //[clockwise/counterclockwise][currentRotation][testNumber][rowOffset/colOffset]
