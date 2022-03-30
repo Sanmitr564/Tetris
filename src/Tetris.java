@@ -183,6 +183,21 @@ public class Tetris extends ApplicationAdapter {
                 renderer.end();
             }
         }
+        renderer.begin(ShapeType.Filled);
+        for(int y = Global.VISIBLE_ROWS; y < Global.ROWS; y++){
+            for(int x = 0; x < Global.COLS; x++){
+                if(board[y][x] != Color.WHITE){
+                    renderer.setColor(board[y][x]);
+                    renderer.rect(
+                            Global.FIELD_X + Global.GAP + x * (Global.SQUARE_SIZE + Global.GAP * 2),
+                            Global.FIELD_Y + Global.GAP + y * (Global.SQUARE_SIZE + Global.GAP * 2) - fieldYOffset,
+                            Global.SQUARE_SIZE,
+                            Global.SQUARE_SIZE
+                    );
+                }
+            }
+        }
+        renderer.end();
     }
 
     private void drawOutlines() {
