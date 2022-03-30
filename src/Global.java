@@ -1,4 +1,6 @@
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 
 public class Global {
     public static final int WORLD_WIDTH = 1920;
@@ -27,7 +29,7 @@ public class Global {
     public static final float GAP = 0;
     public static final float SQUARE_SIZE = FIELD_WIDTH/(float)COLS - GAP * 2;
 
-
+    //<editor-fold desc="Color Array">
     public static final Color[] COLORS = new Color[] {
             Color.BLUE,
             Color.ORANGE,
@@ -37,4 +39,17 @@ public class Global {
             Color.TEAL,
             Color.YELLOW
     };
+    //</editor-fold>
+
+    //<editor-fold desc="Texture Array">
+    public static final Texture[] TEXTURES = new Texture[] {
+            new Texture(Gdx.files.internal("PiecePics/JPiece.png")),
+            new Texture(Gdx.files.internal("PiecePics/LPiece.png")),
+            new Texture(Gdx.files.internal("PiecePics/SPiece.png")),
+            new Texture(Gdx.files.internal("PiecePics/ZPiece.png")),
+            new Texture(Gdx.files.internal("PiecePics/TPiece.png")),
+            new Texture(Gdx.files.internal("PiecePics/IPiece.png")),
+            new Texture(Gdx.files.internal("PiecePics/OPiece.png")),
+    };
+    //</editor-fold>
 }
