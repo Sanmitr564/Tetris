@@ -2,6 +2,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -35,6 +36,8 @@ public class Tetris extends ApplicationAdapter {
     private int leftTimer;
     private int downTimer;
 
+    private float fieldYOffset;
+
     @Override//called once when we start the game
     public void create() {
 
@@ -49,19 +52,19 @@ public class Tetris extends ApplicationAdapter {
             Arrays.fill(colors, Color.WHITE);
         }
         tetrominos = new ArrayList<>();
-        /*
-        rightTimer = 0;
-        leftTimer = 0;
-        downTimer = 0;
-         */
+
+        fieldYOffset = 0;
 
         randomTetrominos();
         piece = tetrominos.remove(0);
 
+        Gdx.gl.glLineWidth(1.5f);
     }
 
     @Override//called 60 times a second
     public void render() {
+        fieldYOffset = fieldYOffset < 1 ? 0 : fieldYOffset * 17/20;
+        System.out.println();
         preRender();
         updatePiece();
         control();
@@ -84,7 +87,7 @@ public class Tetris extends ApplicationAdapter {
     private void preRender() {
         viewport.apply();
 
-        Gdx.gl.glClearColor(87/255f, 25/255f, 148/255f, 1);
+        Gdx.gl.glClearColor(87 / 255f, 25 / 255f, 148 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float delta = Gdx.graphics.getDeltaTime();//1/60 
 
@@ -142,11 +145,7 @@ public class Tetris extends ApplicationAdapter {
 
         if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
             piece.drop();
-            scanRows();
-            piece = tetrominos.remove(0);
-            if (tetrominos.size() < 7) {
-                randomTetrominos();
-            }
+            newPiece();
         }
     }
 
@@ -154,45 +153,58 @@ public class Tetris extends ApplicationAdapter {
 
         renderer.begin(ShapeType.Filled);
         renderer.setColor(Color.BLACK);
-        renderer.rect(Global.FIELD_X, Global.FIELD_Y, Global.FIELD_WIDTH, Global.FIELD_HEIGHT);
+        renderer.rect(Global.FIELD_X,
+                Global.FIELD_Y - fieldYOffset,
+                Global.FIELD_WIDTH,
+                Global.FIELD_HEIGHT
+        );
+        renderer.end();
         for (int y = 0; y < Global.VISIBLE_ROWS; y++) {
             for (int x = 0; x < Global.COLS; x++) {
-                if(board[y][x] == Color.WHITE) {
-                    continue;
+                if (board[y][x] == Color.WHITE) {
+                    renderer.begin(ShapeType.Line);
+                    renderer.setColor(77/255f, 77/255f, 77/255f, 1);
+                }else {
+                    renderer.begin(ShapeType.Filled);
+                    renderer.setColor(board[y][x]);
                 }
-                renderer.setColor(board[y][x]);
-                renderer.rect(Global.FIELD_X + Global.GAP + x * (Global.SQUARE_SIZE + Global.GAP*2), Global.FIELD_Y + Global.GAP + y * (Global.SQUARE_SIZE + Global.GAP*2), Global.SQUARE_SIZE, Global.SQUARE_SIZE);
+                renderer.rect(
+                        Global.FIELD_X + Global.GAP + x * (Global.SQUARE_SIZE + Global.GAP * 2),
+                        Global.FIELD_Y + Global.GAP + y * (Global.SQUARE_SIZE + Global.GAP * 2) - fieldYOffset,
+                        Global.SQUARE_SIZE,
+                        Global.SQUARE_SIZE
+                );
+                renderer.end();
             }
         }
-        renderer.end();
-
-
     }
 
-    private void drawOutlines(){
+    private void drawOutlines() {
         Tetromino t = new Tetromino(piece);
-        while(t.checkDown()){
-            t.setCenter(new int[] {t.getCenter()[0]-1, t.getCenter()[1]});
+        while (t.checkDown()) {
+            t.setCenter(new int[]{t.getCenter()[0] - 1, t.getCenter()[1]});
         }
 
         renderer.begin(ShapeType.Line);
         renderer.setColor(t.getColor());
-        for(int[] b : t.getBlocks()){
-            renderer.rect(Global.FIELD_X + Global.GAP + (b[1] + t.getCenter()[1]) * ((Global.SQUARE_SIZE + Global.GAP*2)), Global.FIELD_Y + Global.GAP + (b[0] + t.getCenter()[0]) * ((Global.SQUARE_SIZE + Global.GAP*2)), Global.SQUARE_SIZE, Global.SQUARE_SIZE);
+        for (int[] b : t.getBlocks()) {
+            renderer.rect(
+                    Global.FIELD_X + Global.GAP + (b[1] + t.getCenter()[1]) * ((Global.SQUARE_SIZE + Global.GAP * 2)),
+                    Global.FIELD_Y + Global.GAP + (b[0] + t.getCenter()[0]) * ((Global.SQUARE_SIZE + Global.GAP * 2)) - fieldYOffset,
+                    Global.SQUARE_SIZE,
+                    Global.SQUARE_SIZE
+            );
         }
         renderer.end();
     }
 
-    private void checkStick(){
+    private void checkStick() {
         if (!piece.canMoveDown()) {
             stickTimer++;
             dropTimer = 0;
             if (stickTimer % 45 == 0) {
                 scanRows();
-                piece = tetrominos.remove(0);
-                if (tetrominos.size() == 0) {
-                    randomTetrominos();
-                }
+                newPiece();
             }
         } else {
             stickTimer = 0;
@@ -207,7 +219,8 @@ public class Tetris extends ApplicationAdapter {
         piece.updateGrid(piece.getColor());
     }
 
-    private void scanRows() {
+    private int scanRows() {
+        int rowsShifted = 0;
         for (int row = board.length - 1; row >= 0; row--) {
             boolean isFull = true;
             for (int col = 0; col < board[row].length; col++) {
@@ -218,8 +231,10 @@ public class Tetris extends ApplicationAdapter {
             }
             if (isFull) {
                 shiftDown(row);
+                rowsShifted++;
             }
         }
+        return rowsShifted;
     }
 
     private void shiftDown(int delRow) {
@@ -235,6 +250,20 @@ public class Tetris extends ApplicationAdapter {
         while (tetrominoListClone.size() > 0) {
             Pieces temp = tetrominoListClone.remove((int) (Math.random() * tetrominoListClone.size()));
             tetrominos.add(new Tetromino(temp));
+        }
+    }
+
+    private void newPiece() {
+        int rows = scanRows();
+        if (rows == 0) {
+            fieldYOffset = 5;
+        } else {
+            fieldYOffset = 5 * (rows+1);
+        }
+
+        piece = tetrominos.remove(0);
+        if (tetrominos.size() < 7) {
+            randomTetrominos();
         }
     }
 }

@@ -8,6 +8,9 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+
+Tetris.iml
+
 # AWS User-specific
 .idea/**/aws.xml
 
