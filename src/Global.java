@@ -42,7 +42,7 @@ public class Global {
     //</editor-fold>
 
     //<editor-fold desc="Texture Array">
-    public static final Texture[] TEXTURES = new Texture[] {
+    public static final Texture[] PiecePic = new Texture[] {
             new Texture(Gdx.files.internal("PiecePics/JPiece.png")),
             new Texture(Gdx.files.internal("PiecePics/LPiece.png")),
             new Texture(Gdx.files.internal("PiecePics/SPiece.png")),
