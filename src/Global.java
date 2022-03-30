@@ -7,7 +7,7 @@ public class Global {
     public static final int X = 1;
     public static final int Y = 0;
 
-    public static final int FIELD_WIDTH = 400;
+    public static final int FIELD_WIDTH = 350;
     public static final int FIELD_HEIGHT = 2*FIELD_WIDTH;
 
     public static final int MOVE_DELAY = 3;
@@ -16,6 +16,8 @@ public class Global {
     //Bottom Left Corner
     public static final float FIELD_X = (WORLD_WIDTH-FIELD_WIDTH)/2f;
     public static final float FIELD_Y = (WORLD_HEIGHT - FIELD_HEIGHT)/2f;
+
+    public static final float OUTLINE_SIZE = 4;
 
     public static final int ROWS = 23;
 

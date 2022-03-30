@@ -58,12 +58,11 @@ public class Tetris extends ApplicationAdapter {
         randomTetrominos();
         piece = tetrominos.remove(0);
 
-        Gdx.gl.glLineWidth(1.5f);
     }
 
     @Override//called 60 times a second
     public void render() {
-        fieldYOffset = fieldYOffset < 1 ? 0 : fieldYOffset * 17/20;
+        fieldYOffset = fieldYOffset < 1 ? 0 : fieldYOffset * 17 / 20;
         System.out.println();
         preRender();
         updatePiece();
@@ -152,6 +151,12 @@ public class Tetris extends ApplicationAdapter {
     private void drawGrid() {
 
         renderer.begin(ShapeType.Filled);
+        renderer.setColor(Color.WHITE);
+        renderer.rect(Global.FIELD_X - Global.OUTLINE_SIZE,
+                Global.FIELD_Y - fieldYOffset - Global.OUTLINE_SIZE,
+                Global.FIELD_WIDTH + 2 * Global.OUTLINE_SIZE,
+                Global.FIELD_HEIGHT + Global.OUTLINE_SIZE
+        );
         renderer.setColor(Color.BLACK);
         renderer.rect(Global.FIELD_X,
                 Global.FIELD_Y - fieldYOffset,
@@ -159,12 +164,13 @@ public class Tetris extends ApplicationAdapter {
                 Global.FIELD_HEIGHT
         );
         renderer.end();
+        Gdx.gl.glLineWidth(1 / 3f);
         for (int y = 0; y < Global.VISIBLE_ROWS; y++) {
             for (int x = 0; x < Global.COLS; x++) {
                 if (board[y][x] == Color.WHITE) {
                     renderer.begin(ShapeType.Line);
-                    renderer.setColor(77/255f, 77/255f, 77/255f, 1);
-                }else {
+                    renderer.setColor(30 / 255f, 30 / 255f, 30 / 255f, 1);
+                } else {
                     renderer.begin(ShapeType.Filled);
                     renderer.setColor(board[y][x]);
                 }
@@ -185,6 +191,8 @@ public class Tetris extends ApplicationAdapter {
             t.setCenter(new int[]{t.getCenter()[0] - 1, t.getCenter()[1]});
         }
 
+        Gdx.gl.glLineWidth(1.3f);
+
         renderer.begin(ShapeType.Line);
         renderer.setColor(t.getColor());
         for (int[] b : t.getBlocks()) {
@@ -202,14 +210,14 @@ public class Tetris extends ApplicationAdapter {
         if (!piece.canMoveDown()) {
             stickTimer++;
             dropTimer = 0;
-            if (stickTimer % 45 == 0) {
+            if (stickTimer % 30 == 0) {
                 scanRows();
                 newPiece();
             }
         } else {
             stickTimer = 0;
             dropTimer++;
-            if (dropTimer % 50 == 0) {
+            if (dropTimer % 40 == 0) {
                 piece.down();
             }
         }
@@ -258,7 +266,7 @@ public class Tetris extends ApplicationAdapter {
         if (rows == 0) {
             fieldYOffset = 5;
         } else {
-            fieldYOffset = 5 * (rows+1);
+            fieldYOffset = 5 * (rows + 1);
         }
 
         piece = tetrominos.remove(0);
