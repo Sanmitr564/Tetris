@@ -2,7 +2,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 
-public class Global {
+public class Final {
     public static final int WORLD_WIDTH = 1920;
     public static final int WORLD_HEIGHT = 1080;
 

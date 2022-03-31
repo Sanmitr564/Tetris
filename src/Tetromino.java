@@ -11,7 +11,7 @@ public class Tetromino {
         this.center = center;
         this.piece = piece;
         rotation = Rotation.up;
-        this.color = Global.COLORS[piece.ordinal()];
+        this.color = Final.COLORS[piece.ordinal()];
     }
 
     public Tetromino(Tetromino t) {
@@ -19,7 +19,7 @@ public class Tetromino {
         this.center[0] = t.getCenter()[0];
         this.center[1] = t.getCenter()[1];
         this.piece = t.getPiece();
-        this.color = Global.COLORS[piece.ordinal()];
+        this.color = Final.COLORS[piece.ordinal()];
         rotation = t.getRotation();
     }
 
@@ -30,7 +30,7 @@ public class Tetromino {
         } else {
             this.center = new int[]{20, 5};
         }
-        this.color = Global.COLORS[piece.ordinal()];
+        this.color = Final.COLORS[piece.ordinal()];
         rotation = Rotation.up;
     }
 

@@ -2,7 +2,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -48,12 +47,12 @@ public class Tetris extends ApplicationAdapter {
     public void create() {
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(Global.WORLD_WIDTH, Global.WORLD_HEIGHT, camera);
+        viewport = new FitViewport(Final.WORLD_WIDTH, Final.WORLD_HEIGHT, camera);
         renderer = new ShapeRenderer();
         font = new BitmapFont();
         batch = new SpriteBatch();//if you want to use images instead of using ShapeRenderer 
 
-        board = new Color[Global.ROWS][Global.COLS];
+        board = new Color[Final.ROWS][Final.COLS];
         for (Color[] colors : board) {
             Arrays.fill(colors, Color.WHITE);
         }
@@ -114,9 +113,9 @@ public class Tetris extends ApplicationAdapter {
         if (Gdx.input.isKeyJustPressed(Keys.DOWN)) {
             piece.down();
             dropTimer = 0;
-            downTimer = Global.FIRST_MOVE_DELAY;
+            downTimer = Final.FIRST_MOVE_DELAY;
         } else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-            if (downTimer % Global.MOVE_DELAY == 0 && downTimer >= 0) {
+            if (downTimer % Final.MOVE_DELAY == 0 && downTimer >= 0) {
                 piece.down();
                 dropTimer = 0;
             }
@@ -129,9 +128,9 @@ public class Tetris extends ApplicationAdapter {
 
         if (Gdx.input.isKeyJustPressed(Keys.LEFT)) {
             piece.left();
-            leftTimer = Global.FIRST_MOVE_DELAY;
+            leftTimer = Final.FIRST_MOVE_DELAY;
         } else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-            if (leftTimer % Global.MOVE_DELAY == 0 && leftTimer >= 0) {
+            if (leftTimer % Final.MOVE_DELAY == 0 && leftTimer >= 0) {
                 piece.left();
             }
             leftTimer++;
@@ -139,9 +138,9 @@ public class Tetris extends ApplicationAdapter {
 
         if (Gdx.input.isKeyJustPressed(Keys.RIGHT)) {
             piece.right();
-            rightTimer = Global.FIRST_MOVE_DELAY;
+            rightTimer = Final.FIRST_MOVE_DELAY;
         } else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            if (rightTimer % Global.MOVE_DELAY == 0 && rightTimer >= 0) {
+            if (rightTimer % Final.MOVE_DELAY == 0 && rightTimer >= 0) {
                 piece.right();
 
             }
@@ -159,34 +158,43 @@ public class Tetris extends ApplicationAdapter {
     }
 
     private void drawGrid() {
-
         renderer.begin(ShapeType.Filled);
         renderer.setColor(Color.WHITE);
-        renderer.rect(Global.FIELD_X - Global.OUTLINE_SIZE,
-                Global.FIELD_Y - fieldYOffset - Global.OUTLINE_SIZE,
-                Global.FIELD_WIDTH + 2 * Global.OUTLINE_SIZE,
-                Global.FIELD_HEIGHT + Global.OUTLINE_SIZE
+        renderer.rect(Final.FIELD_X - Final.OUTLINE_SIZE,
+                Final.FIELD_Y - fieldYOffset - Final.OUTLINE_SIZE,
+                Final.FIELD_WIDTH + 2 * Final.OUTLINE_SIZE,
+                Final.FIELD_HEIGHT + Final.OUTLINE_SIZE
         );
-        renderer.rect(Global.FIELD_X + Global.FIELD_WIDTH + Global.OUTLINE_SIZE,
-                Global.FIELD_Y + Global.NEXT_HEIGHT_OFFSET - (fieldYOffset + Global.OUTLINE_SIZE),
-                Global.NEXT_WIDTH + 2*Global.OUTLINE_SIZE,
-                Global.FIELD_HEIGHT - Global.NEXT_HEIGHT_OFFSET + Global.OUTLINE_SIZE
+        renderer.rect(Final.FIELD_X + Final.FIELD_WIDTH + Final.OUTLINE_SIZE,
+                Final.FIELD_Y + Final.NEXT_HEIGHT_OFFSET - (fieldYOffset + Final.OUTLINE_SIZE),
+                Final.NEXT_WIDTH + Final.OUTLINE_SIZE,
+                Final.FIELD_HEIGHT - Final.NEXT_HEIGHT_OFFSET + Final.OUTLINE_SIZE
         );
-        renderer.rect(Global.FIELD_X - (Global.OUTLINE_SIZE * 2 + Global.NEXT_WIDTH),
-                Global.FIELD_Y + Global.HOLD_HEIGHT_OFFSET - (fieldYOffset + Global.OUTLINE_SIZE),
-                Global.NEXT_WIDTH + 2*Global.OUTLINE_SIZE,
-                Global.FIELD_HEIGHT - Global.HOLD_HEIGHT_OFFSET + Global.OUTLINE_SIZE
+        renderer.rect(Final.FIELD_X - (Final.OUTLINE_SIZE * 2 + Final.NEXT_WIDTH),
+                Final.FIELD_Y + Final.HOLD_HEIGHT_OFFSET - (fieldYOffset + Final.OUTLINE_SIZE),
+                Final.NEXT_WIDTH + Final.OUTLINE_SIZE,
+                Final.FIELD_HEIGHT - Final.HOLD_HEIGHT_OFFSET + Final.OUTLINE_SIZE
         );
         renderer.setColor(Color.BLACK);
-        renderer.rect(Global.FIELD_X,
-                Global.FIELD_Y - fieldYOffset,
-                Global.FIELD_WIDTH,
-                Global.FIELD_HEIGHT
+        renderer.rect(Final.FIELD_X,
+                Final.FIELD_Y - fieldYOffset,
+                Final.FIELD_WIDTH,
+                Final.FIELD_HEIGHT
+        );
+        renderer.rect(Final.FIELD_X + Final.FIELD_WIDTH + Final.OUTLINE_SIZE,
+                Final.FIELD_Y + Final.NEXT_HEIGHT_OFFSET - fieldYOffset,
+                Final.NEXT_WIDTH,
+                Final.FIELD_HEIGHT - Final.NEXT_HEIGHT_OFFSET
+        );
+        renderer.rect(Final.FIELD_X - (Final.NEXT_WIDTH + Final.OUTLINE_SIZE),
+                Final.FIELD_Y + Final.HOLD_HEIGHT_OFFSET - fieldYOffset,
+                Final.NEXT_WIDTH,
+                Final.FIELD_HEIGHT - Final.HOLD_HEIGHT_OFFSET
         );
         renderer.end();
         Gdx.gl.glLineWidth(1 / 3f);
-        for (int y = 0; y < Global.VISIBLE_ROWS; y++) {
-            for (int x = 0; x < Global.COLS; x++) {
+        for (int y = 0; y < Final.VISIBLE_ROWS; y++) {
+            for (int x = 0; x < Final.COLS; x++) {
                 if (board[y][x] == Color.WHITE) {
                     renderer.begin(ShapeType.Line);
                     renderer.setColor(30 / 255f, 30 / 255f, 30 / 255f, 1);
@@ -195,24 +203,24 @@ public class Tetris extends ApplicationAdapter {
                     renderer.setColor(board[y][x]);
                 }
                 renderer.rect(
-                        Global.FIELD_X + Global.GAP + x * (Global.SQUARE_SIZE + Global.GAP * 2),
-                        Global.FIELD_Y + Global.GAP + y * (Global.SQUARE_SIZE + Global.GAP * 2) - fieldYOffset,
-                        Global.SQUARE_SIZE,
-                        Global.SQUARE_SIZE
+                        Final.FIELD_X + Final.GAP + x * (Final.SQUARE_SIZE + Final.GAP * 2),
+                        Final.FIELD_Y + Final.GAP + y * (Final.SQUARE_SIZE + Final.GAP * 2) - fieldYOffset,
+                        Final.SQUARE_SIZE,
+                        Final.SQUARE_SIZE
                 );
                 renderer.end();
             }
         }
         renderer.begin(ShapeType.Filled);
-        for (int y = Global.VISIBLE_ROWS; y < Global.ROWS; y++) {
-            for (int x = 0; x < Global.COLS; x++) {
+        for (int y = Final.VISIBLE_ROWS; y < Final.ROWS; y++) {
+            for (int x = 0; x < Final.COLS; x++) {
                 if (board[y][x] != Color.WHITE) {
                     renderer.setColor(board[y][x]);
                     renderer.rect(
-                            Global.FIELD_X + Global.GAP + x * (Global.SQUARE_SIZE + Global.GAP * 2),
-                            Global.FIELD_Y + Global.GAP + y * (Global.SQUARE_SIZE + Global.GAP * 2) - fieldYOffset,
-                            Global.SQUARE_SIZE,
-                            Global.SQUARE_SIZE
+                            Final.FIELD_X + Final.GAP + x * (Final.SQUARE_SIZE + Final.GAP * 2),
+                            Final.FIELD_Y + Final.GAP + y * (Final.SQUARE_SIZE + Final.GAP * 2) - fieldYOffset,
+                            Final.SQUARE_SIZE,
+                            Final.SQUARE_SIZE
                     );
                 }
             }
@@ -232,10 +240,10 @@ public class Tetris extends ApplicationAdapter {
         renderer.setColor(t.getColor());
         for (int[] b : t.getBlocks()) {
             renderer.rect(
-                    Global.FIELD_X + Global.GAP + (b[1] + t.getCenter()[1]) * ((Global.SQUARE_SIZE + Global.GAP * 2)),
-                    Global.FIELD_Y + Global.GAP + (b[0] + t.getCenter()[0]) * ((Global.SQUARE_SIZE + Global.GAP * 2)) - fieldYOffset,
-                    Global.SQUARE_SIZE,
-                    Global.SQUARE_SIZE
+                    Final.FIELD_X + Final.GAP + (b[1] + t.getCenter()[1]) * ((Final.SQUARE_SIZE + Final.GAP * 2)),
+                    Final.FIELD_Y + Final.GAP + (b[0] + t.getCenter()[0]) * ((Final.SQUARE_SIZE + Final.GAP * 2)) - fieldYOffset,
+                    Final.SQUARE_SIZE,
+                    Final.SQUARE_SIZE
             );
         }
         renderer.end();
