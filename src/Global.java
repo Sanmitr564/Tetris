@@ -10,14 +10,14 @@ public class Global {
     public static final int Y = 0;
 
     public static final int FIELD_WIDTH = 350;
-    public static final int FIELD_HEIGHT = 2*FIELD_WIDTH;
+    public static final int FIELD_HEIGHT = 2 * FIELD_WIDTH;
 
     public static final int MOVE_DELAY = 3;
     public static final int FIRST_MOVE_DELAY = -15;
 
     //Bottom Left Corner
-    public static final float FIELD_X = (WORLD_WIDTH-FIELD_WIDTH)/2f;
-    public static final float FIELD_Y = (WORLD_HEIGHT - FIELD_HEIGHT)/2f;
+    public static final float FIELD_X = (WORLD_WIDTH - FIELD_WIDTH) / 2f;
+    public static final float FIELD_Y = (WORLD_HEIGHT - FIELD_HEIGHT) / 2f;
 
     public static final float OUTLINE_SIZE = 4;
 
@@ -27,10 +27,15 @@ public class Global {
     public static final int COLS = 10;
 
     public static final float GAP = 0;
-    public static final float SQUARE_SIZE = FIELD_WIDTH/(float)COLS - GAP * 2;
+    public static final float SQUARE_SIZE = FIELD_WIDTH / (float) COLS - GAP * 2;
+
+    public static final float NEXT_WIDTH = 150;
+    public static final float NEXT_HEIGHT_OFFSET = 200;
+
+    public static final float HOLD_HEIGHT_OFFSET = 500;
 
     //<editor-fold desc="Color Array">
-    public static final Color[] COLORS = new Color[] {
+    public static final Color[] COLORS = new Color[]{
             Color.BLUE,
             Color.ORANGE,
             Color.GREEN,
@@ -42,7 +47,7 @@ public class Global {
     //</editor-fold>
 
     //<editor-fold desc="Texture Array">
-    public static final Texture[] PiecePic = new Texture[] {
+    public static final Texture[] PiecePic = new Texture[]{
             new Texture(Gdx.files.internal("PiecePics/JPiece.png")),
             new Texture(Gdx.files.internal("PiecePics/LPiece.png")),
             new Texture(Gdx.files.internal("PiecePics/SPiece.png")),

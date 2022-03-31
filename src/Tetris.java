@@ -26,7 +26,13 @@ public class Tetris extends ApplicationAdapter {
 
     private ArrayList<Tetromino> tetrominos;
     private static final ArrayList<Pieces> tetrominoList = new ArrayList<>(Arrays.asList(
-            Pieces.JPiece, Pieces.LPiece, Pieces.SPiece, Pieces.ZPiece, Pieces.TPiece, Pieces.IPiece, Pieces.OPiece
+            Pieces.JPiece,
+            Pieces.LPiece,
+            Pieces.SPiece,
+            Pieces.ZPiece,
+            Pieces.TPiece,
+            Pieces.IPiece,
+            Pieces.OPiece
     ));
 
     private int stickTimer;
@@ -148,6 +154,10 @@ public class Tetris extends ApplicationAdapter {
         }
     }
 
+    private void drawNext() {
+
+    }
+
     private void drawGrid() {
 
         renderer.begin(ShapeType.Filled);
@@ -156,6 +166,16 @@ public class Tetris extends ApplicationAdapter {
                 Global.FIELD_Y - fieldYOffset - Global.OUTLINE_SIZE,
                 Global.FIELD_WIDTH + 2 * Global.OUTLINE_SIZE,
                 Global.FIELD_HEIGHT + Global.OUTLINE_SIZE
+        );
+        renderer.rect(Global.FIELD_X + Global.FIELD_WIDTH + Global.OUTLINE_SIZE,
+                Global.FIELD_Y + Global.NEXT_HEIGHT_OFFSET - (fieldYOffset + Global.OUTLINE_SIZE),
+                Global.NEXT_WIDTH + 2*Global.OUTLINE_SIZE,
+                Global.FIELD_HEIGHT - Global.NEXT_HEIGHT_OFFSET + Global.OUTLINE_SIZE
+        );
+        renderer.rect(Global.FIELD_X - (Global.OUTLINE_SIZE * 2 + Global.NEXT_WIDTH),
+                Global.FIELD_Y + Global.HOLD_HEIGHT_OFFSET - (fieldYOffset + Global.OUTLINE_SIZE),
+                Global.NEXT_WIDTH + 2*Global.OUTLINE_SIZE,
+                Global.FIELD_HEIGHT - Global.HOLD_HEIGHT_OFFSET + Global.OUTLINE_SIZE
         );
         renderer.setColor(Color.BLACK);
         renderer.rect(Global.FIELD_X,
@@ -184,9 +204,9 @@ public class Tetris extends ApplicationAdapter {
             }
         }
         renderer.begin(ShapeType.Filled);
-        for(int y = Global.VISIBLE_ROWS; y < Global.ROWS; y++){
-            for(int x = 0; x < Global.COLS; x++){
-                if(board[y][x] != Color.WHITE){
+        for (int y = Global.VISIBLE_ROWS; y < Global.ROWS; y++) {
+            for (int x = 0; x < Global.COLS; x++) {
+                if (board[y][x] != Color.WHITE) {
                     renderer.setColor(board[y][x]);
                     renderer.rect(
                             Global.FIELD_X + Global.GAP + x * (Global.SQUARE_SIZE + Global.GAP * 2),
@@ -268,8 +288,7 @@ public class Tetris extends ApplicationAdapter {
     }
 
     private void randomTetrominos() {
-        ArrayList<Pieces> tetrominoListClone = new ArrayList<>();
-        tetrominoListClone.addAll(tetrominoList);
+        ArrayList<Pieces> tetrominoListClone = new ArrayList<>(tetrominoList);
         while (tetrominoListClone.size() > 0) {
             Pieces temp = tetrominoListClone.remove((int) (Math.random() * tetrominoListClone.size()));
             tetrominos.add(new Tetromino(temp));

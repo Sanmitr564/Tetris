@@ -14,7 +14,7 @@ public class Tetromino {
         this.color = Global.COLORS[piece.ordinal()];
     }
 
-    public Tetromino(Tetromino t){
+    public Tetromino(Tetromino t) {
         center = new int[2];
         this.center[0] = t.getCenter()[0];
         this.center[1] = t.getCenter()[1];
@@ -23,12 +23,12 @@ public class Tetromino {
         rotation = t.getRotation();
     }
 
-    public Tetromino(Pieces piece){
+    public Tetromino(Pieces piece) {
         this.piece = piece;
-        if(piece == Pieces.IPiece || piece == Pieces.OPiece){
-            this.center = new int[] {20, 4};
-        }else{
-            this.center = new int[] {20,5};
+        if (piece == Pieces.IPiece || piece == Pieces.OPiece) {
+            this.center = new int[]{20, 4};
+        } else {
+            this.center = new int[]{20, 5};
         }
         this.color = Global.COLORS[piece.ordinal()];
         rotation = Rotation.up;
@@ -91,7 +91,7 @@ public class Tetromino {
     }
 
     public void drop() {
-        while(canMoveDown()){
+        while (canMoveDown()) {
             down();
         }
     }
@@ -102,7 +102,7 @@ public class Tetromino {
                     [piece.ordinal()]
                     [rotation.ordinal()]
                     [i];
-           Tetris.board[center[0] + centerOffset[0]][center[1] + centerOffset[1]] = c;
+            Tetris.board[center[0] + centerOffset[0]][center[1] + centerOffset[1]] = c;
         }
 
     }
@@ -123,9 +123,9 @@ public class Tetromino {
         }
         temp = Rotation.values()[num];
         int[][][][] kickData;
-        if(piece == Pieces.IPiece){
+        if (piece == Pieces.IPiece) {
             kickData = RotationData.iKickData;
-        }else{
+        } else {
             kickData = RotationData.standardKickData;
         }
         for (int[] arr : kickData[r.ordinal()][rotation.ordinal()]) {
@@ -494,25 +494,25 @@ class RotationData {
                             {-1, 2}
                     },
                     {
-                            {0,0},
-                            {0,2},
-                            {0,-1},
-                            {1,2},
-                            {-2,-1}
+                            {0, 0},
+                            {0, 2},
+                            {0, -1},
+                            {1, 2},
+                            {-2, -1}
                     },
                     {
-                            {0,0},
-                            {0,1},
-                            {0,-2},
-                            {-2,1},
-                            {1,-2}
+                            {0, 0},
+                            {0, 1},
+                            {0, -2},
+                            {-2, 1},
+                            {1, -2}
                     },
                     {
-                            {0,0},
-                            {0,-2},
-                            {0,1},
-                            {-1,-2},
-                            {2,1}
+                            {0, 0},
+                            {0, -2},
+                            {0, 1},
+                            {-1, -2},
+                            {2, 1}
                     }
             }
     };
