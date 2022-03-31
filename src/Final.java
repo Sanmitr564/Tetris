@@ -34,6 +34,8 @@ public class Final {
 
     public static final float HOLD_HEIGHT_OFFSET = 500;
 
+    public static final float SIDE_TOP_BORDER = 50;
+
     //<editor-fold desc="Color Array">
     public static final Color[] COLORS = new Color[]{
             Color.BLUE,

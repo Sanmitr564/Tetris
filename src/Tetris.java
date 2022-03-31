@@ -184,12 +184,12 @@ public class Tetris extends ApplicationAdapter {
         renderer.rect(Final.FIELD_X + Final.FIELD_WIDTH + Final.OUTLINE_SIZE,
                 Final.FIELD_Y + Final.NEXT_HEIGHT_OFFSET - fieldYOffset,
                 Final.NEXT_WIDTH,
-                Final.FIELD_HEIGHT - Final.NEXT_HEIGHT_OFFSET
+                Final.FIELD_HEIGHT - Final.NEXT_HEIGHT_OFFSET - Final.SIDE_TOP_BORDER
         );
         renderer.rect(Final.FIELD_X - (Final.NEXT_WIDTH + Final.OUTLINE_SIZE),
                 Final.FIELD_Y + Final.HOLD_HEIGHT_OFFSET - fieldYOffset,
                 Final.NEXT_WIDTH,
-                Final.FIELD_HEIGHT - Final.HOLD_HEIGHT_OFFSET
+                Final.FIELD_HEIGHT - Final.HOLD_HEIGHT_OFFSET - Final.SIDE_TOP_BORDER
         );
         renderer.end();
         Gdx.gl.glLineWidth(1 / 3f);
