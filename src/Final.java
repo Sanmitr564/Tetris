@@ -1,6 +1,8 @@
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Final {
     public static final int WORLD_WIDTH = 1920;
@@ -29,12 +31,23 @@ public class Final {
     public static final float GAP = 0;
     public static final float SQUARE_SIZE = FIELD_WIDTH / (float) COLS - GAP * 2;
 
+    public static final int FUTURE_DEPTH = 5;
+
     public static final float NEXT_WIDTH = 150;
     public static final float NEXT_HEIGHT_OFFSET = 200;
 
-    public static final float HOLD_HEIGHT_OFFSET = 500;
+    public static final float HOLD_HEIGHT_OFFSET = 550;
 
-    public static final float SIDE_TOP_BORDER = 50;
+    public static final float SIDE_TOP_BORDER = 35;
+
+    public static final float NEXT_CENTER = FIELD_X + FIELD_WIDTH + OUTLINE_SIZE + NEXT_WIDTH / 2;
+    public static final float NEXT_BEGIN_Y = (Final.FIELD_Y + Final.NEXT_HEIGHT_OFFSET) + (Final.FIELD_HEIGHT - Final.NEXT_HEIGHT_OFFSET - Final.SIDE_TOP_BORDER);
+    public static final float NEXT_GAP = (Final.FIELD_HEIGHT - Final.NEXT_HEIGHT_OFFSET - Final.SIDE_TOP_BORDER) / (FUTURE_DEPTH + 1);
+
+    public static final float HOLD_CENTER_X = FIELD_X - (OUTLINE_SIZE + NEXT_WIDTH / 2);
+    public static final float HOLD_CENTER_Y = Final.FIELD_Y + Final.HOLD_HEIGHT_OFFSET + (Final.FIELD_HEIGHT - Final.HOLD_HEIGHT_OFFSET - Final.SIDE_TOP_BORDER) / 2;
+
+    public static final float TEXTURE_SCALE = .3f;
 
     //<editor-fold desc="Color Array">
     public static final Color[] COLORS = new Color[]{
@@ -48,8 +61,9 @@ public class Final {
     };
     //</editor-fold>
 
+
     //<editor-fold desc="Texture Array">
-    public static final Texture[] PiecePic = new Texture[]{
+    public static final Texture[] TEXTURES = new Texture[]{
             new Texture(Gdx.files.internal("PiecePics/JPiece.png")),
             new Texture(Gdx.files.internal("PiecePics/LPiece.png")),
             new Texture(Gdx.files.internal("PiecePics/SPiece.png")),
@@ -59,4 +73,5 @@ public class Final {
             new Texture(Gdx.files.internal("PiecePics/OPiece.png")),
     };
     //</editor-fold>
+
 }

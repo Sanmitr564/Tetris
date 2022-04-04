@@ -2,6 +2,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.viewport.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,7 +24,7 @@ public class Tetris extends ApplicationAdapter {
     public static Color[][] board;
     private Tetromino piece;
 
-    private ArrayList<Tetromino> tetrominos;
+    private ArrayList<Pieces> tetrominos;
     private static final ArrayList<Pieces> tetrominoList = new ArrayList<>(Arrays.asList(
             Pieces.JPiece,
             Pieces.LPiece,
@@ -33,6 +34,8 @@ public class Tetris extends ApplicationAdapter {
             Pieces.IPiece,
             Pieces.OPiece
     ));
+
+    private Pieces hold;
 
     private int stickTimer;
     private int dropTimer;
@@ -61,20 +64,22 @@ public class Tetris extends ApplicationAdapter {
         fieldYOffset = 0;
 
         randomTetrominos();
-        piece = tetrominos.remove(0);
+        randomTetrominos();
+
+        piece = new Tetromino(tetrominos.remove(0));
 
     }
 
     @Override//called 60 times a second
     public void render() {
         fieldYOffset = fieldYOffset < 1 ? 0 : fieldYOffset * 17 / 20;
-        System.out.println();
         preRender();
         updatePiece();
         control();
         checkStick();
         drawGrid();
-        drawOutlines();
+        drawShadow();
+        drawNextAndHold();
     }
 
     @Override
@@ -151,41 +156,79 @@ public class Tetris extends ApplicationAdapter {
             piece.drop();
             newPiece();
         }
+
+        if (Gdx.input.isKeyJustPressed(Keys.C)) {
+            storePiece();
+        }
     }
 
-    private void drawNext() {
+    private void drawNextAndHold() {
 
+        for (int i = 0; i < Final.FUTURE_DEPTH; i++) {
+            batch.begin();
+            Pieces temp = tetrominos.get(i);
+            Texture t = Final.TEXTURES[temp.ordinal()];
+            batch.draw(
+                    t,
+                    Final.NEXT_CENTER - t.getWidth() * Final.TEXTURE_SCALE / 2f,
+                    Final.NEXT_BEGIN_Y - (t.getHeight() * Final.TEXTURE_SCALE / 2f + (i + 1) * Final.NEXT_GAP) - fieldYOffset,
+                    t.getWidth() * Final.TEXTURE_SCALE,
+                    t.getHeight() * Final.TEXTURE_SCALE
+            );
+            batch.end();
+        }
+
+        if (hold == null) {
+            return;
+        }
+
+        batch.begin();
+        Texture t = Final.TEXTURES[hold.ordinal()];
+        batch.draw(
+                t,
+                Final.HOLD_CENTER_X - t.getWidth() * Final.TEXTURE_SCALE / 2f,
+                Final.HOLD_CENTER_Y - t.getHeight() * Final.TEXTURE_SCALE / 2f - fieldYOffset,
+                t.getWidth() * Final.TEXTURE_SCALE,
+                t.getHeight() * Final.TEXTURE_SCALE
+        );
+        batch.end();
     }
 
     private void drawGrid() {
         renderer.begin(ShapeType.Filled);
         renderer.setColor(Color.WHITE);
+        //Field outline
         renderer.rect(Final.FIELD_X - Final.OUTLINE_SIZE,
                 Final.FIELD_Y - fieldYOffset - Final.OUTLINE_SIZE,
                 Final.FIELD_WIDTH + 2 * Final.OUTLINE_SIZE,
                 Final.FIELD_HEIGHT + Final.OUTLINE_SIZE
         );
+        //Upcoming blocks outline
         renderer.rect(Final.FIELD_X + Final.FIELD_WIDTH + Final.OUTLINE_SIZE,
                 Final.FIELD_Y + Final.NEXT_HEIGHT_OFFSET - (fieldYOffset + Final.OUTLINE_SIZE),
                 Final.NEXT_WIDTH + Final.OUTLINE_SIZE,
                 Final.FIELD_HEIGHT - Final.NEXT_HEIGHT_OFFSET + Final.OUTLINE_SIZE
         );
+        //Held block outline
         renderer.rect(Final.FIELD_X - (Final.OUTLINE_SIZE * 2 + Final.NEXT_WIDTH),
                 Final.FIELD_Y + Final.HOLD_HEIGHT_OFFSET - (fieldYOffset + Final.OUTLINE_SIZE),
                 Final.NEXT_WIDTH + Final.OUTLINE_SIZE,
                 Final.FIELD_HEIGHT - Final.HOLD_HEIGHT_OFFSET + Final.OUTLINE_SIZE
         );
         renderer.setColor(Color.BLACK);
+        //Field surface
         renderer.rect(Final.FIELD_X,
                 Final.FIELD_Y - fieldYOffset,
                 Final.FIELD_WIDTH,
                 Final.FIELD_HEIGHT
         );
+        //Next block surface
         renderer.rect(Final.FIELD_X + Final.FIELD_WIDTH + Final.OUTLINE_SIZE,
                 Final.FIELD_Y + Final.NEXT_HEIGHT_OFFSET - fieldYOffset,
                 Final.NEXT_WIDTH,
                 Final.FIELD_HEIGHT - Final.NEXT_HEIGHT_OFFSET - Final.SIDE_TOP_BORDER
         );
+        //Held block surface
         renderer.rect(Final.FIELD_X - (Final.NEXT_WIDTH + Final.OUTLINE_SIZE),
                 Final.FIELD_Y + Final.HOLD_HEIGHT_OFFSET - fieldYOffset,
                 Final.NEXT_WIDTH,
@@ -228,7 +271,7 @@ public class Tetris extends ApplicationAdapter {
         renderer.end();
     }
 
-    private void drawOutlines() {
+    private void drawShadow() {
         Tetromino t = new Tetromino(piece);
         while (t.checkDown()) {
             t.setCenter(new int[]{t.getCenter()[0] - 1, t.getCenter()[1]});
@@ -299,7 +342,11 @@ public class Tetris extends ApplicationAdapter {
         ArrayList<Pieces> tetrominoListClone = new ArrayList<>(tetrominoList);
         while (tetrominoListClone.size() > 0) {
             Pieces temp = tetrominoListClone.remove((int) (Math.random() * tetrominoListClone.size()));
-            tetrominos.add(new Tetromino(temp));
+            if (tetrominos.size() > 2 && tetrominos.get(tetrominos.size() - 1) == temp) {
+                tetrominoListClone.add(temp);
+                continue;
+            }
+            tetrominos.add(temp);
         }
     }
 
@@ -311,9 +358,21 @@ public class Tetris extends ApplicationAdapter {
             fieldYOffset = 5 * (rows + 1);
         }
 
-        piece = tetrominos.remove(0);
+        piece = new Tetromino(tetrominos.remove(0));
         if (tetrominos.size() < 7) {
             randomTetrominos();
+        }
+    }
+
+    private void storePiece() {
+        piece.updateGrid(Color.WHITE);
+        if (hold == null) {
+            hold = piece.getPiece();
+            piece = new Tetromino(tetrominos.remove(0));
+        } else {
+            Pieces temp = hold;
+            hold = piece.getPiece();
+            piece = new Tetromino(temp);
         }
     }
 }

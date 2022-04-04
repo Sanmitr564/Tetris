@@ -34,7 +34,7 @@ public class Tetromino {
         rotation = Rotation.up;
     }
 
-    private Pieces getPiece() {
+    public Pieces getPiece() {
         return piece;
     }
 
@@ -370,7 +370,7 @@ class RotationData {
 
     //</editor-fold>
 
-    //[clockwise/counterclockwise][currentRotation][testNumber][rowOffset/colOffset]
+    //[clockwise/counterclockwise(turnDirection)][currentRotation][testNumber][rowOffset/colOffset]
     //<editor-fold desc="Standard Piece Kick Data">
     public static final int[][][][] standardKickData = new int[][][][]{
             //Clockwise
@@ -446,6 +446,7 @@ class RotationData {
     };
     //</editor-fold>
 
+    //<editor-fold desc="I Piece Kick Data">
     public static final int[][][][] iKickData = new int[][][][]{
             //Clockwise
             {
@@ -516,4 +517,5 @@ class RotationData {
                     }
             }
     };
+    //</editor-fold>
 }
