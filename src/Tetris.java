@@ -14,6 +14,7 @@ import com.badlogic.gdx.Input.Keys;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
 public class Tetris extends ApplicationAdapter {
     private OrthographicCamera camera; //the camera to our world
     private Viewport viewport; //maintains the ratios of your world
@@ -46,6 +47,8 @@ public class Tetris extends ApplicationAdapter {
 
     private float fieldYOffset;
 
+    private boolean canHold;
+
     @Override//called once when we start the game
     public void create() {
 
@@ -67,7 +70,7 @@ public class Tetris extends ApplicationAdapter {
         randomTetrominos();
 
         piece = new Tetromino(tetrominos.remove(0));
-
+        canHold = true;
     }
 
     @Override//called 60 times a second
@@ -184,6 +187,9 @@ public class Tetris extends ApplicationAdapter {
 
         batch.begin();
         Texture t = Final.TEXTURES[hold.ordinal()];
+        if(!canHold){
+            batch.setColor(Color.GRAY);
+        }
         batch.draw(
                 t,
                 Final.HOLD_CENTER_X - t.getWidth() * Final.TEXTURE_SCALE / 2f,
@@ -191,6 +197,7 @@ public class Tetris extends ApplicationAdapter {
                 t.getWidth() * Final.TEXTURE_SCALE,
                 t.getHeight() * Final.TEXTURE_SCALE
         );
+        batch.setColor(Color.WHITE);
         batch.end();
     }
 
@@ -296,14 +303,14 @@ public class Tetris extends ApplicationAdapter {
         if (!piece.canMoveDown()) {
             stickTimer++;
             dropTimer = 0;
-            if (stickTimer % 30 == 0) {
+            if (stickTimer % 40 == 0) {
                 scanRows();
                 newPiece();
             }
         } else {
             stickTimer = 0;
             dropTimer++;
-            if (dropTimer % 40 == 0) {
+            if (dropTimer % 60 == 0) {
                 piece.down();
             }
         }
@@ -362,17 +369,22 @@ public class Tetris extends ApplicationAdapter {
         if (tetrominos.size() < 7) {
             randomTetrominos();
         }
+
+        canHold = true;
     }
 
     private void storePiece() {
-        piece.updateGrid(Color.WHITE);
-        if (hold == null) {
-            hold = piece.getPiece();
-            piece = new Tetromino(tetrominos.remove(0));
-        } else {
-            Pieces temp = hold;
-            hold = piece.getPiece();
-            piece = new Tetromino(temp);
+        if (canHold) {
+            piece.updateGrid(Color.WHITE);
+            if (hold == null) {
+                hold = piece.getPiece();
+                piece = new Tetromino(tetrominos.remove(0));
+            } else {
+                Pieces temp = hold;
+                hold = piece.getPiece();
+                piece = new Tetromino(temp);
+            }
         }
+        canHold = false;
     }
 }
