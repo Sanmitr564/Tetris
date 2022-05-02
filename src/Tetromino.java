@@ -148,7 +148,10 @@ public class Tetromino {
                         [piece.ordinal()]
                         [r.ordinal()]
                         [i];
-                if (Tetris.board[center[0] + centerOffset[0] + offset[0]][center[1] + centerOffset[1] + offset[1]] != Color.WHITE) {
+                if (Tetris.board
+                        [center[0] + centerOffset[0] + offset[0]]
+                        [center[1] + centerOffset[1] + offset[1]]
+                        != Color.WHITE) {
                     return false;
                 }
             }
@@ -370,6 +373,8 @@ class RotationData {
 
     //</editor-fold>
 
+    //Kick Data are center offsets tested in order to turn a block
+    //All values are relative to the current center of rotation
     //[clockwise/counterclockwise(turnDirection)][currentRotation][testNumber][rowOffset/colOffset]
     //<editor-fold desc="Standard Piece Kick Data">
     public static final int[][][][] standardKickData = new int[][][][]{
@@ -446,6 +451,7 @@ class RotationData {
     };
     //</editor-fold>
 
+    //Unique Kick Data for I Piece
     //<editor-fold desc="I Piece Kick Data">
     public static final int[][][][] iKickData = new int[][][][]{
             //Clockwise
