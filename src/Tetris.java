@@ -13,9 +13,11 @@ import com.badlogic.gdx.Input.Keys;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 
 public class Tetris extends ApplicationAdapter {
+    Random random;
     private OrthographicCamera camera; //the camera to our world
     private Viewport viewport; //maintains the ratios of your world
     private ShapeRenderer renderer; //used to draw textures and fonts 
@@ -65,6 +67,8 @@ public class Tetris extends ApplicationAdapter {
         tetrominos = new ArrayList<>();
 
         fieldYOffset = 0;
+
+        random = new Random(91781961L);
 
         randomTetrominos();
         randomTetrominos();
@@ -348,7 +352,7 @@ public class Tetris extends ApplicationAdapter {
     private void randomTetrominos() {
         ArrayList<Pieces> tetrominoListClone = new ArrayList<>(tetrominoList);
         while (tetrominoListClone.size() > 0) {
-            Pieces temp = tetrominoListClone.remove((int) (Math.random() * tetrominoListClone.size()));
+            Pieces temp = tetrominoListClone.remove((int) (/*Math.random()*/random.nextDouble() * tetrominoListClone.size()));
             if (tetrominos.size() > 2 && tetrominos.get(tetrominos.size() - 1) == temp) {
                 tetrominoListClone.add(temp);
                 continue;
