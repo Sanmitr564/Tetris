@@ -17,7 +17,6 @@ import java.util.Random;
 
 
 public class Tetris extends ApplicationAdapter {
-    Random random;
     private OrthographicCamera camera; //the camera to our world
     private Viewport viewport; //maintains the ratios of your world
     private ShapeRenderer renderer; //used to draw textures and fonts 
@@ -51,6 +50,7 @@ public class Tetris extends ApplicationAdapter {
 
     private boolean canHold;
 
+    //private Random random;
     @Override//called once when we start the game
     public void create() {
 
@@ -68,7 +68,7 @@ public class Tetris extends ApplicationAdapter {
 
         fieldYOffset = 0;
 
-        random = new Random(91781961L);
+        //random = new Random(91781961L);
 
         randomTetrominos();
         randomTetrominos();
@@ -135,7 +135,7 @@ public class Tetris extends ApplicationAdapter {
         }
 
         if (Gdx.input.isKeyJustPressed(Keys.UP)) {
-            piece.up();
+            //piece.up();
         }
 
         if (Gdx.input.isKeyJustPressed(Keys.LEFT)) {
@@ -154,7 +154,6 @@ public class Tetris extends ApplicationAdapter {
         } else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
             if (rightTimer % Final.MOVE_DELAY == 0 && rightTimer >= 0) {
                 piece.right();
-
             }
             rightTimer++;
         }
@@ -170,7 +169,6 @@ public class Tetris extends ApplicationAdapter {
     }
 
     private void drawNextAndHold() {
-
         for (int i = 0; i < Final.FUTURE_DEPTH; i++) {
             batch.begin();
             Pieces temp = tetrominos.get(i);
@@ -352,7 +350,7 @@ public class Tetris extends ApplicationAdapter {
     private void randomTetrominos() {
         ArrayList<Pieces> tetrominoListClone = new ArrayList<>(tetrominoList);
         while (tetrominoListClone.size() > 0) {
-            Pieces temp = tetrominoListClone.remove((int) (/*Math.random()*/random.nextDouble() * tetrominoListClone.size()));
+            Pieces temp = tetrominoListClone.remove((int) (Math.random()/*random.nextDouble()*/ * tetrominoListClone.size()));
             if (tetrominos.size() > 2 && tetrominos.get(tetrominos.size() - 1) == temp) {
                 tetrominoListClone.add(temp);
                 continue;
